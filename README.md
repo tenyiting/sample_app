@@ -1,2 +1,2 @@
 # sample_app
-# jitjityeah
+# rubytry_1

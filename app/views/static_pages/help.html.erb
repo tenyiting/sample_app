@@ -1,0 +1,11 @@
+<%= provide :title, "Help" %>
+
+<h1> <%= t :help %> </h1>
+<p>
+  <%= t :help_p1 %>
+  <%= link_to t(:help_p2),
+  "http://www.railstutorial.org/help" %>
+  <%= t :help_p3 %>
+  <em><%= link_to t(:help_p4),
+  "http://www.railstutorial.org/book" %></em>
+</p>

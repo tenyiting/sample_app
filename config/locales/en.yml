@@ -1,33 +1,24 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  c_en: "English"
+  c_ja: "日本語"
+  l_title: "Rails Tutorial Sample App"
+  h_title: "Sample App"
+  hello: "Hello there"
+  home: "Home"
+  l_title: "Rails Tutorial Sample App"
+  log_in: "Log in"
+  p_1: "This is the home page for the"
+  p_2: "Ruby on Rails Tutorial"
+  p_3: "Sample Application"
+  user: "User"
+  help: "Help"
+  help_p1: "Get help on the Ruby on Rails Tutorial Sample App"
+  help_p2: "Rails Tutorial Help Page"
+  help_p3: "To get help on this sample app, see the:"
+  help_p4: "Ruby on Rails Tutorial Books"
+  help_p5: "Ruby on Rails Tutorial Slides"
+  help_p6: "Ruby on Rails Tutorial Videos"
+  date:
+    formats:
+      Default: "%Y-%m-%d"
+      Short: "%b %d"

@@ -49,3 +49,11 @@ en:
   user_deleted: "User deleted"
   delete_fail: "Delete fail!"
   n_authorized: "You are not authorized"
+
+  info: "Please check your email to activate your account."
+  w_activate_acc: "Welcome to the Sample App! Click on the link below to activate your account: "
+  hi: "Hi,"
+  comma: ","
+  acc_activated: "Account activated"
+  invalid_link: "Invalid activation link"
+  not_activated: "Account not activated. Check you email for the activation link."

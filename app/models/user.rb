@@ -6,13 +6,9 @@ class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, length: {maximum: 255}, format: {with: VALID_EMAIL_REGEX}
   validates :email, uniqueness: true
+  validates :password, presence: true, length: {minimum: 6}, allow_nil: true
 
   has_secure_password
-  private
-
-  def downcase_email
-    self.email.downcase!
-  end
 
   class << self
     def new_token
@@ -36,5 +32,15 @@ class User < ApplicationRecord
 
   def forget
     update_attribute :remember_digest, nil
+  end
+
+  def authenticated? remember_token
+    BCrypt::Password.new(remember_digest).is_password? remember_token
+  end
+
+  private
+
+  def downcase_email
+    self.email.downcase!
   end
 end

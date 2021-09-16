@@ -1,10 +1,11 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, except: %i(new show create)
-  before_action :correct_user, only: %i(edit update)
   before_action :load_user, only: :show
+  before_action :logged_in_user, only: %i(index edit update destroy)
+  before_action :correct_user, only: %i(edit update)
   before_action :admin_user, only: %i(destroy)
 
-  def index
+
+ def index
     @users = User.paginate(page: params[:page])
   end
 
@@ -15,24 +16,20 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)  # Not the final implementation!
+    @user = User.new(user_params)
     if @user.save
-      log_in @user
-      flash[:success] = t(:welcome)
-      redirect_to users_new_url(@user)
+      @user.send_activation_email
+      flash[:info] = t(:pls_chk_email)
+      redirect_to @user
     else
       render :new
     end
   end
 
-  def edit
-    @user = User.find_by id: params[:id]
-  end
-
   def update
     @user = User.find_by(id: params[:id])
-    if @user.update(user_params)
-      flash[:success] = t(:profile_updated)
+    if @user.update_attributes(user_params)
+      flash[:success] = "Profile updated"
       redirect_to @user
     else
       render :edit
@@ -42,12 +39,14 @@ class UsersController < ApplicationController
   def destroy
     user = User.find_by(id: params[:id])
     if user&.destroy
-      flash[:success] = t(:user_deleted)
+      flash[:success] = t(:User_deleted)
     else
-      flash[:danger] = t(:delete_fail)
+        flash[:danger] = t(:Delete_fail)
     end
     redirect_to users_url
   end
+
+  private
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
@@ -64,7 +63,7 @@ class UsersController < ApplicationController
   def logged_in_user
     unless logged_in?
       store_location
-      flash[:danger] = t(:pls_log_in)
+      flash[:danger] = t(:Please_log_in)
       redirect_to login_url
     end
   end
@@ -72,8 +71,8 @@ class UsersController < ApplicationController
   def correct_user
     @user = User.find_by(id: params[:id])
     return if current_user?(@user)
-    flash[:danger] = t(:n_authorized)
-    redirect_to(root_url) unless current_user?(@user)
+    flash[:danger]= t(:you_are_not_authorized)
+    redirect_to(root_url)
   end
 
   def admin_user

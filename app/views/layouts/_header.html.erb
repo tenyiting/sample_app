@@ -3,8 +3,8 @@
     <%= link_to t(:h_title) , "#", id: "logo" %>
     <nav>
       <ul class="nav navbar-nav navbar-right">
-      <li><%= link_to t(:home), home_path %></li>
-      <li><%= link_to t(:help), help_path %></li>
+      <li><%= link_to t(:Home), home_path %></li>
+      <li><%= link_to t(:Help), help_path %></li>
 
       <% if logged_in? %>
         <li><%= link_to t(:users), users_path %></li>
@@ -24,8 +24,8 @@
         <li><%= link_to t(:log_in), login_path %></li>
       <% end %>
 
-      <li><%= link_to t(:c_en), locale: :en %></li>
-      <li><%= link_to t(:c_ja), locale: :ja %></li>
+      # <li><%= link_to t(:c_en), locale: :en %></li>
+      # <li><%= link_to t(:c_ja), locale: :ja %></li>
       </ul>
     </nav>
   </div>

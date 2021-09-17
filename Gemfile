@@ -28,6 +28,10 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
+gem "image_processing"
+gem "mini_magick"
+gem "active_storage_validations"
+
 gem "will_paginate", git: "https://github.com/mislav/will_paginate.git", branch: "master"
 gem "bootstrap-will_paginate", "1.0.0"
 

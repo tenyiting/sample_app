@@ -2,15 +2,35 @@ class User < ApplicationRecord
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save :downcase_email
   before_create :create_activation_digest
+
   has_many :microposts, dependent: :destroy
+  has_many :active_relationships, class_name: Relationship.name,
+    foreign_key: :follower_id, dependent: :destroy
+  has_many :passive_relationships, class_name: Relationship.name,
+    foreign_key: :followed_id, dependent: :destroy
+  has_many :following, through: :active_relationships, source: :followed
+  has_many :followers, through: :passive_relationships, source: :follower
+
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
   validates :name, presence: true
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, length: {maximum: 255}, format: {with: VALID_EMAIL_REGEX}
-  validates :email, uniqueness: true
+  validates :email, presence: true, length: {maximum: 255},
+    format: {with: VALID_EMAIL_REGEX}
   validates :password, presence: true, length: {minimum: 6}, allow_nil: true
 
   has_secure_password
+
+  def follow other_user #Follows a user.
+    following << other_user
+  end
+
+  def unfollow other_user #Unfollows a user.
+    following.delete other_user
+  end
+
+  def following? other_user #Returns if the current user is following the other_user or not
+    following.include? other_user
+  end
 
   class << self
     def new_token
@@ -23,7 +43,7 @@ class User < ApplicationRecord
       else
         BCrypt::Engine.cost
       end
-        BCrypt::Password.create string, cost: cost
+      BCrypt::Password.create string, cost: cost
     end
   end
 
@@ -32,14 +52,14 @@ class User < ApplicationRecord
     update_attribute :remember_digest, User.digest(remember_token)
   end
 
-  def forget
-    update_attribute :remember_digest, nil
-  end
-
   def authenticated? attribute, token
     digest = send "#{attribute}_digest"
     return false if digest.nil?
     BCrypt::Password.new(digest).is_password? token
+  end
+
+  def forget
+    update_attribute :remember_digest, nil
   end
 
   def activate
@@ -48,10 +68,6 @@ class User < ApplicationRecord
 
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
-  end
-
-  def password_reset_expired?
-    reset_sent_at < 2.hours.ago
   end
 
   def create_reset_digest
@@ -63,14 +79,18 @@ class User < ApplicationRecord
     UserMailer.password_reset(self).deliver_now
   end
 
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
+  end
+
   def feed
-    microposts
+    Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)
   end
 
   private
 
   def downcase_email
-    self.email = email.downcase
+    self.email.downcase!
   end
 
   def create_activation_digest
